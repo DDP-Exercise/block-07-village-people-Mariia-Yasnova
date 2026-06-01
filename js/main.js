@@ -23,7 +23,7 @@ import Village from "./class.village.js";
  *    Just add other files ot make it work.
  *    How? Find a way, or you will hang coming tuesday!
  *
- *    The royal servants - 980-06-01
+ *    Mariia Yasnova - 980-06-01
  *  *******************************************************/
 
 
