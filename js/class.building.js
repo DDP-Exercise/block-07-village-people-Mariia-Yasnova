@@ -1,19 +1,56 @@
 "use strict";
-/**
- * Create a Building class. Each Building should have
- * - a name
- * - a capacity
- * - an array of its residents
- *
- * Each Building should provide methods to
- * - addResident(citizen)
- *      - If there is still space in the building, add the citizen as resident.
- *        also mark this building as the citizens home.
- *      - If there is no space, check if someone has to makeSpaceFor(citizen) (= is there
- *        a resident in this building with a lower rank?)
- * - removeResident(citizen)
- *      - Kick a resident out of the building. Also delete the citizens home (null).
- *      - Attention: When you kick a resident, make sure there is no lower ranked
- *        resident remaining in the building.
- * - listAllResidents() for the Citizen Directory.
- */
+
+export default class Building {
+    constructor(name, capacity) {
+        this.name = name;
+        this.capacity = capacity;
+        this.residents = [];
+    }
+
+    addResident(citizen) {
+        if (this.residents.length < this.capacity) {
+            this.residents.push(citizen);
+            citizen.home = this;
+            return true;
+        }
+
+        return this.makeSpaceFor(citizen);
+    }
+
+    makeSpaceFor(citizen) {
+        // find lowest-ranked resident that is weaker than incoming citizen
+        let weakestIndex = -1;
+        let weakestRank = citizen.rank;
+
+        for (let i = 0; i < this.residents.length; i++) {
+            const r = this.residents[i];
+            if (r.rank > weakestRank) {
+                weakestRank = r.rank;
+                weakestIndex = i;
+            }
+        }
+
+        if (weakestIndex !== -1) {
+            const kicked = this.residents[weakestIndex];
+            this.removeResident(kicked);
+
+            this.residents.push(citizen);
+            citizen.home = this;
+            return true;
+        }
+
+        return false;
+    }
+
+    removeResident(citizen) {
+        const index = this.residents.indexOf(citizen);
+        if (index !== -1) {
+            this.residents.splice(index, 1);
+            citizen.home = null;
+        }
+    }
+
+    listAllResidents() {
+        return this.residents;
+    }
+}
